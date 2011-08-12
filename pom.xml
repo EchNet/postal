@@ -3,14 +3,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.example</groupId>
-  <artifactId>hello-world</artifactId>
+  <groupId>com.shopximity</groupId>
+  <artifactId>postal</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Jetty HelloWorld</name>
+  <name>Shopximity Dynamic Web Content Service</name>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<jettyVersion>7.2.0.v20101020</jettyVersion>
+	<junitVersion>3.8.1</junitVersion>
   </properties>
 
   <dependencies>
@@ -18,6 +20,12 @@
 	  <groupId>org.eclipse.jetty</groupId>
 	  <artifactId>jetty-server</artifactId>
 	  <version>${jettyVersion}</version>
+	</dependency>
+	<dependency>
+	  <groupId>junit</groupId>
+	  <artifactId>junit</artifactId>
+	  <version>${junitVersion}</version>
+	  <scope>test</scope>
 	</dependency>
   </dependencies>
 

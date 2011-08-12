@@ -1,0 +1,6 @@
+<mappings>
+	<mapping>
+		<source>/context</source>
+		<classname>com.shopximity.model.Context</classname>
+	</mapping>
+</mappings>
