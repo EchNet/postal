@@ -1,7 +1,7 @@
 package com.shopximity.template;
 
 import junit.framework.TestCase;
-import java.io.*;
+import com.shopximity.Stub;
 
 public class FirstTest extends TestCase
 {
@@ -11,8 +11,6 @@ public class FirstTest extends TestCase
 
 	public void testResource() throws Exception
 	{
-		InputStream stream = this.getClass().getClassLoader().getResourceAsStream("templates/page.xhtml");
-		int b = stream.read();
-		assertTrue(b > 0);
+		assertEquals("1.0", Stub.VERSION);
 	}
 }
