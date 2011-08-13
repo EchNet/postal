@@ -6,8 +6,8 @@
   <groupId>com.shopximity</groupId>
   <artifactId>postal</artifactId>
   <version>0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
-  <name>Shopximity Dynamic Web Content Service</name>
+  <packaging>pom</packaging>
+  <name>Shopximity Dynamic Web Content System</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,36 +15,7 @@
 	<junitVersion>3.8.1</junitVersion>
   </properties>
 
-  <dependencies>
-	<dependency>
-	  <groupId>org.eclipse.jetty</groupId>
-	  <artifactId>jetty-server</artifactId>
-	  <version>${jettyVersion}</version>
-	</dependency>
-	<dependency>
-	  <groupId>junit</groupId>
-	  <artifactId>junit</artifactId>
-	  <version>${junitVersion}</version>
-	  <scope>test</scope>
-	</dependency>
-  </dependencies>
-
-  <build>
-	<plugins>
-	  <plugin>
-		<!-- This plugin is needed for the servlet example -->
-		<groupId>org.mortbay.jetty</groupId>
-		<artifactId>jetty-maven-plugin</artifactId>
-		<version>${jettyVersion}</version>
-	  </plugin>
-	  <plugin>
-		<groupId>org.codehaus.mojo</groupId>
-		<artifactId>exec-maven-plugin</artifactId>
-		<version>1.1</version>
-		<executions>
-		  <execution><goals><goal>java</goal></goals></execution>
-		</executions>
-	  </plugin>
-	</plugins>
-  </build>
+  <modules>
+    <module>service</module>
+  </modules>
 </project>

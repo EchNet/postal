@@ -1,0 +1,33 @@
+#surefire
+#Sat Aug 13 13:49:55 EDT 2011
+testClassesDirectory=/Users/Ech/dev/postal/service/target/test-classes
+classPathUrl.4=/Users/Ech/.m2/repository/org/eclipse/jetty/jetty-continuation/7.2.0.v20101020/jetty-continuation-7.2.0.v20101020.jar
+classPathUrl.3=/Users/Ech/.m2/repository/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar
+classPathUrl.2=/Users/Ech/.m2/repository/org/eclipse/jetty/jetty-server/7.2.0.v20101020/jetty-server-7.2.0.v20101020.jar
+useManifestOnlyJar=true
+classPathUrl.1=/Users/Ech/dev/postal/service/target/classes
+reportsDirectory=/Users/Ech/dev/postal/service/target/surefire-reports
+classPathUrl.0=/Users/Ech/dev/postal/service/target/test-classes
+dirscanner.0=directoryScannerOptions
+providerConfiguration=org.apache.maven.surefire.junit.JUnit3Provider
+testSuiteDefinitionTestSourceDirectory=/Users/Ech/dev/postal/service/src/test/java
+surefireClassPathUrl.1=/Users/Ech/.m2/repository/org/apache/maven/surefire/surefire-api/2.7.1/surefire-api-2.7.1.jar
+surefireClassPathUrl.0=/Users/Ech/.m2/repository/org/apache/maven/surefire/surefire-junit3/2.7.1/surefire-junit3-2.7.1.jar
+report.2=org.apache.maven.surefire.report.XMLReporter
+useSystemClassLoader=true
+report.1=org.apache.maven.surefire.report.BriefFileReporter
+report.0=org.apache.maven.surefire.report.ForkingConsoleReporter
+excludes0=**/*$*
+isTrimStackTrace=true
+dirscanner.0.params=/Users/Ech/dev/postal/service/target/test-classes|[**/Test*.java, **/*Test.java, **/*TestCase.java]|[**/*$*]
+includes2=**/*TestCase.java
+enableAssertions=true
+includes1=**/*Test.java
+failIfNoTests=false
+includes0=**/Test*.java
+dirscanner.0.types=java.io.File|java.util.ArrayList|java.util.ArrayList
+classPathUrl.8=/Users/Ech/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar
+classPathUrl.7=/Users/Ech/.m2/repository/org/eclipse/jetty/jetty-util/7.2.0.v20101020/jetty-util-7.2.0.v20101020.jar
+childDelegation=false
+classPathUrl.6=/Users/Ech/.m2/repository/org/eclipse/jetty/jetty-io/7.2.0.v20101020/jetty-io-7.2.0.v20101020.jar
+classPathUrl.5=/Users/Ech/.m2/repository/org/eclipse/jetty/jetty-http/7.2.0.v20101020/jetty-http-7.2.0.v20101020.jar
