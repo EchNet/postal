@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.shopximity</groupId>
+    <artifactId>postal</artifactId>
+    <version>0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>jpt</artifactId>
+  <packaging>jar</packaging>
+  <name>Java Page Templates - Shopximity edition</name>
+
+  <dependencies>
+	<dependency>
+	  <groupId>dom4j</groupId>
+	  <artifactId>dom4j</artifactId>
+	  <version>1.4</version>
+	  <scope>compile</scope>
+	</dependency>
+	<dependency>
+	  <groupId>org.beanshell</groupId>
+	  <artifactId>bsh-core</artifactId>
+	  <version>2.0b4</version>
+	  <scope>compile</scope>
+	</dependency>
+	<dependency>
+	  <groupId>net.sourceforge.nekohtml</groupId>
+	  <artifactId>nekohtml</artifactId>
+	  <version>1.9.15</version>
+	  <scope>compile</scope>
+	</dependency>
+	<dependency>
+	  <groupId>junit</groupId>
+	  <artifactId>junit</artifactId>
+	  <version>${junitVersion}</version>
+	  <scope>test</scope>
+	</dependency>
+  </dependencies>
+</project>
