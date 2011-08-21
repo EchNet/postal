@@ -1,0 +1,16 @@
+<body xmlns="http://www.w3.org/1999/xhtml" xmlns:dwc="http://shopximity.com/schema/dwc">
+<h1 dwc:content="n.title">TITLE</h1>
+<h2 dwc:condition="n.prime">A prime number</h2>
+<div dwc:condition="n.base" style="margin: 30px;">
+<span style="font-size: 48px; color: blue;"><span dwc:content="n.base"/><sup dwc:content="n.exponent"/></span>
+</div>
+<p>Represented as <span dwc:content="n.decimal"/> in decimal, <span dwc:content="n.hexadecimal"/> in
+hexadecimal, and <span dwc:content="n.octal"/> in octal.</p>
+<div dwc:condition="!n.prime && n.base">
+<p>Some facts about <span dwc:content="n.value"/>...</p>
+<ul>
+<li>The sum of its proper divisors is <span dwc:content="n.sumOfProperDivisors"/></li>
+<li>RAD(<span dwc:content="n.value"/>) = <span dwc:content="n.rad"/></li>
+</ul>
+</div>
+</body>

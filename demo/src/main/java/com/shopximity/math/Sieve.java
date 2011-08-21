@@ -2,7 +2,7 @@
 // The indispensable prime number sieve.
 //
 
-package com.shopximity;
+package com.shopximity.math;
 
 import java.util.BitSet;
 

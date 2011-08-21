@@ -8,26 +8,33 @@
     <artifactId>postal</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>micro</artifactId>
+  <artifactId>demo</artifactId>
   <packaging>war</packaging>
-  <name>Shopximity Micro Demo</name>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	<jettyVersion>7.2.0.v20101020</jettyVersion>
-  </properties>
+  <name>Shopximity Dynamic Web Content Demo</name>
 
   <dependencies>
+	<dependency>
+	  <groupId>com.shopximity</groupId>
+	  <artifactId>spx-dwclib</artifactId>
+	  <version>${project.version}</version>
+	</dependency>
 	<dependency>
 	  <groupId>org.eclipse.jetty</groupId>
 	  <artifactId>jetty-server</artifactId>
 	  <version>${jettyVersion}</version>
+	</dependency>
+	<dependency>
+	  <groupId>junit</groupId>
+	  <artifactId>junit</artifactId>
+	  <version>${junitVersion}</version>
+	  <scope>test</scope>
 	</dependency>
   </dependencies>
 
   <build>
 	<plugins>
 	  <plugin>
+		<!-- This plugin is needed for the servlet example -->
 		<groupId>org.mortbay.jetty</groupId>
 		<artifactId>jetty-maven-plugin</artifactId>
 		<version>${jettyVersion}</version>

@@ -1,4 +1,4 @@
-package com.shopximity;
+package com.shopximity.math;
 
 import java.util.ArrayList;
 import java.util.List;
