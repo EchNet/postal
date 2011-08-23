@@ -14,9 +14,9 @@
 
   <dependencies>
 	<dependency>
-	  <groupId>junit</groupId>
-	  <artifactId>junit</artifactId>
-	  <version>${junitVersion}</version>
+	  <groupId>com.shopximity</groupId>
+	  <artifactId>jpt</artifactId>
+	  <version>${project.version}</version>
 	</dependency>
 	<dependency>
 	  <groupId>junit</groupId>

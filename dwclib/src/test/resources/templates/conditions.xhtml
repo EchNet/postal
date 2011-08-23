@@ -1,2 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:dwc="http://shopximity.com/schema/dwc"/>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:dwc="http://shopximity.com/schema/dwc">
+<head>
+<title dwc:condition="title">This should not appear</title>
+<title dwc:condition="!title">Default title</title>
+</head>
+<body>
+<p dwc:condition="user">
+Congratulations #1
+</p>
+<p dwc:condition="user.name">
+Congratulations #2
+</p>
+<p dwc:condition="user">
+<p dwc:condition="user.name">
+Congratulations #3
+</p>
+</p>
+<p dwc:condition="foo">
+<span dwc:condition="user">This should not appear</span>
+</p>
+</body>
+</html>

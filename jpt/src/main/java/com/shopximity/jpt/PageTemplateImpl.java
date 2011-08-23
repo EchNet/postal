@@ -41,6 +41,7 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
+import javax.xml.parsers.SAXParser;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -48,8 +49,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-
-import org.cyberneko.html.parsers.SAXParser;
 
 import org.dom4j.Attribute;
 import org.dom4j.Document;
@@ -73,141 +72,25 @@ import org.xml.sax.helpers.AttributesImpl;
  * @version $Revision: 1.15 $
  */
 public class PageTemplateImpl implements PageTemplate {
-    private URI uri;
+    private URL url;
     private Document template;
     //private String talNamespacePrefix = "tal";
     //private String metalNamespacePrefix = "metal";
-    private Resolver userResolver = null;
 
     // Map of macros contained in this template
     Map macros = null;
 
-    private static SAXReader htmlReader = null;
-    static final SAXReader getHTMLReader() throws Exception {
-        if ( htmlReader == null ) {
-            htmlReader = new SAXReader();
-            SAXParser parser = new SAXParser();
-            parser.setProperty( "http://cyberneko.org/html/properties/names/elems", "match" );
-            parser.setProperty( "http://cyberneko.org/html/properties/names/attrs", "no-change" );
-            parser.setProperty( "http://cyberneko.org/html/properties/default-encoding", "UTF-8" );
-            htmlReader.setXMLReader( parser );
-        }
-        return htmlReader;
-    }
-
-    private static SAXReader xmlReader = null;
-    static final SAXReader getXMLReader() throws Exception {
-        if ( xmlReader == null ) {
-            xmlReader = new SAXReader();
-        }
-        return xmlReader;
-    }
-
-    /*
-    public PageTemplateImpl( String template ) throws PageTemplateException {
-        //this( new StringReader( template ), null );
+    public PageTemplateImpl(URL url, SAXParser saxParser)
+		throws PageTemplateException
+	{
         try {
-            this( new ByteArrayInputStream( template.getBytes( "UTF-8" ) ), null );
-        } catch( java.io.UnsupportedEncodingException e ) {
-            throw new PageTemplateException(e);
-        }
-    }
-
-    public PageTemplateImpl( String template, Resolver resolver ) throws PageTemplateException {
-        //this( new StringReader( template ), resolver );
-        try {
-            this( new ByteArrayInputStream( template.getBytes( "UTF-8" ) ), resolver );
-        } catch( java.io.UnsupportedEncodingException e ) {
-            throw new PageTemplateException(e);
-        }
-    }
-    */
-
-    /**
-     * Tidy doesn't support Reader
-     *
-    public PageTemplateImpl( Reader input ) throws PageTemplateException {
-        this( input, null );
-    }
-
-    public PageTemplateImpl( Reader input, Resolver resolver ) throws PageTemplateException {
-        try {
-            this.uri = null;
-            this.userResolver = resolver;
-            
-            Tidy tidy = getTidy();
-            DOMReader reader = new DOMReader();
-            template = reader.read( tidy.parseDOM( input, null) );       
+			this.url = url;
+            SAXReader reader = new SAXReader(saxParser);
+            template = reader.read( url );
         }
         catch( Exception e ) {
             throw new PageTemplateException(e);
         }
-    }
-    */
-
-    public PageTemplateImpl( InputStream input ) throws PageTemplateException {
-        this( input, null );
-    }
-
-    public PageTemplateImpl( InputStream input, Resolver resolver ) throws PageTemplateException {
-        try {
-            this.uri = null;
-            this.userResolver = resolver;
-            
-            SAXReader reader = getXMLReader();
-            try {
-                template = reader.read( input );
-            } catch( DocumentException e ) {
-                try {
-                    reader = getHTMLReader();
-                    template = reader.read( input );
-                } catch( NoClassDefFoundError ee ) {
-                    // Allow user to omit nekohtml package
-                    // to disable html parsing
-                    //System.err.println( "Warning: no nekohtml" );
-                    //ee.printStackTrace();
-                    throw e;
-                }
-            }
-        }
-        catch( Exception e ) {
-            throw new PageTemplateException(e);
-        }
-    }
-
-    public PageTemplateImpl( URL url ) throws PageTemplateException {
-        try {
-            this.uri = new URI( url.toString() );
-            SAXReader reader = getXMLReader();
-            try {
-                template = reader.read( url );
-            } catch( DocumentException e ) {
-                try {
-                    reader = getHTMLReader();
-                    template = reader.read( url );
-                } catch( NoClassDefFoundError ee ) {
-                    // Allow user to omit nekohtml package
-                    // to disable html parsing
-                    //System.err.println( "Warning: no nekohtml" );
-                    //ee.printStackTrace();
-                    throw e;
-                }
-            }
-        }
-        catch( RuntimeException e ) {
-            throw e;
-        }
-        catch( Exception e ) {
-            throw new PageTemplateException(e);
-        }
-    }
-
-    public Resolver getResolver() {
-        return this.userResolver;
-    }
-    
-    public void setResolver( Resolver resolver ) {
-        this.userResolver = resolver;
     }
 
     public void process( OutputStream output, Object context )
@@ -236,7 +119,7 @@ public class PageTemplateImpl implements PageTemplate {
                          LexicalHandler lexicalHandler, 
                          Object context, 
                          Map dictionary )
-        throws SAXException, PageTemplateException, IOException 
+        throws Exception
     {
         try {
             // Initialize the bean shell
@@ -249,7 +132,7 @@ public class PageTemplateImpl implements PageTemplate {
             }
             beanShell.set( "here", context );
             beanShell.set( "template", this );
-            beanShell.set( "resolver", new DefaultResolver() );
+            beanShell.set( "resolver", new URIResolver(new URI(url.toString())));
             beanShell.set( "bool", new BoolHelper() );
             beanShell.set( "math", new MathHelper() );
             beanShell.set( "date", new DateHelper() );
@@ -742,57 +625,6 @@ public class PageTemplateImpl implements PageTemplate {
             findMacros( template.getRootElement(), this.macros );
         }
         return this.macros;
-    }
-
-    class DefaultResolver extends Resolver {
-        URIResolver uriResolver;
-
-        DefaultResolver() {
-            if ( uri != null ) {
-                uriResolver = new URIResolver( uri );
-            }
-        }
-
-        public URL getResource( String path ) 
-            throws java.net.MalformedURLException
-        {
-            URL resource = null;
-            
-            // If user has supplied resolver, use it
-            if ( userResolver != null ) {
-                resource = userResolver.getResource( path );
-            }
-
-            // If resource not found by user resolver
-            // fall back to resolving by uri
-            if ( resource == null && uriResolver != null ) {
-                resource = uriResolver.getResource( path );
-            }
-
-            return resource;
-        }
-
-        public PageTemplate getPageTemplate( String path )
-            throws PageTemplateException, java.net.MalformedURLException
-        {
-            PageTemplate template = null;
-
-            // If user has supplied resolver, use it
-            if ( userResolver != null ) {
-                template = userResolver.getPageTemplate( path );
-                
-                // template inherits user resolver
-                template.setResolver( userResolver );
-            }
-
-            // If template not found by user resolver
-            // fall back to resolving by uri
-            if ( template == null && uriResolver != null ) {
-                template = uriResolver.getPageTemplate( path );
-            }
-
-            return template;
-        }
     }
 
     class MacroImpl implements Macro {
