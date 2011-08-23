@@ -13,7 +13,7 @@ public class Evaluator
 		return !(obj == null ||
 			     obj.equals(Boolean.FALSE) ||
 			     obj.equals("") ||
-				 obj.equals(new ArrayList()));
+				 obj.equals(Collections.emptyList()));
 	}
 
 	public Object evaluate(String expression, Object data)
@@ -141,6 +141,8 @@ public class Evaluator
 				container = data;
 			else
 				container = lhs.evaluate(data);
+			if (container == null)
+				return null;
 			if (container instanceof Map)
 			{
 				return ((Map) container).get(name);

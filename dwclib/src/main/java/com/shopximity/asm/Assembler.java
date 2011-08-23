@@ -220,6 +220,14 @@ public class Assembler
 			this.data = data;
 			this.writer = writer;
 		}
+
+		public DocumentContext(DocumentContext parent, String name, Object value)
+		{
+			this.url = parent.url;
+			// TODO: inherit all value.
+			this.data = Collections.singletonMap(name, value);
+			this.writer = parent.writer;
+		}
 		
 		public void expand(Node rootNode)
 			throws AssemblerException
@@ -351,6 +359,12 @@ public class Assembler
 			String loopVariable = null;
 			if (repeatExpression != null)
 			{
+				int comma = repeatExpression.lastIndexOf(',');
+				if (comma >= 0)
+				{
+					loopVariable = repeatExpression.substring(comma + 1);
+					repeatExpression = repeatExpression.substring(0, comma);
+				}
 				Object value = context.evaluate(repeatExpression);
 				if (value == null)
 					return;
@@ -358,72 +372,83 @@ public class Assembler
 					values = (Object[]) ((Collection<?>)value).toArray(values);
 				else
 					values[0] = value;
-				loopVariable = "i";
 			}
 
 			for (Object v : values)
 			{
-				if (includeRoot)
+				DocumentContext childContext = context;
+				if (loopVariable != null)
 				{
-					context.writer.write("<");
-					context.writer.write(localName);
+					childContext = new DocumentContext(context, loopVariable, v);
+				}
+				doExpand(childContext, contentExpression, includeRoot);
+			}
+		}
 
-					if (prefixMappings.containsKey(""))
+		private void doExpand(DocumentContext context,
+							  String contentExpression, boolean includeRoot)
+			throws AssemblerException, IOException
+		{
+			if (includeRoot)
+			{
+				context.writer.write("<");
+				context.writer.write(localName);
+
+				if (prefixMappings.containsKey(""))
+				{
+					context.writer.write(" xmlns=\"");
+					context.writer.write(prefixMappings.get(""));
+					context.writer.write("\"");
+				}
+
+				for (Attr attr : attributes)
+				{
+					// TODO: handle attribute overrides.
+					if (!attr.uri.equals(Schema.NAMESPACE_URI))
 					{
-						context.writer.write(" xmlns=\"");
-						context.writer.write(prefixMappings.get(""));
+						context.writer.write(" ");
+						context.writer.write(attr.name);
+						context.writer.write("=\"");
+						context.writer.write(attr.value);
 						context.writer.write("\"");
 					}
+				}
+			}
 
-					for (Attr attr : attributes)
-					{
-						// TODO: handle attribute overrides.
-						if (!attr.uri.equals(Schema.NAMESPACE_URI))
-						{
-							context.writer.write(" ");
-							context.writer.write(attr.name);
-							context.writer.write("=\"");
-							context.writer.write(attr.value);
-							context.writer.write("\"");
-						}
-					}
-				}
-
-				if (contentExpression != null || children.size() > 0)
+			if (contentExpression != null || children.size() > 0)
+			{
+				if (includeRoot)
 				{
-					if (includeRoot)
-					{
-						context.writer.write(">");
-					}
-					if (contentExpression != null)
-					{
-						Object contentValue = context.evaluate(contentExpression);
-						if (contentValue instanceof URI)
-						{
-							context.expandContent(((URI)contentValue).getSchemeSpecificPart());
-						}
-						else 
-						{
-							if (contentValue == null) contentValue = "";
-							context.writer.write(contentValue.toString());
-						}
-					}
-					else
-					{
-						for (Node child : children)
-						{
-							child.expand(context, true);
-						}
-					}
-					if (includeRoot)
-					{
-						context.writer.write("</" + localName + ">");
-					}
+					context.writer.write(">");
 				}
-				else if (includeRoot)
+				if (contentExpression != null)
 				{
-					context.writer.write("/>");
+					Object contentValue = context.evaluate(contentExpression);
+					if (contentValue instanceof URI)
+					{
+						context.expandContent(((URI)contentValue).getSchemeSpecificPart());
+					}
+					else 
+					{
+						if (contentValue == null) contentValue = "";
+						context.writer.write(contentValue.toString());
+					}
 				}
+				else
+				{
+					for (Node child : children)
+					{
+						child.expand(context, true);
+					}
+				}
+				if (includeRoot)
+				{
+					context.writer.write("</" + localName + ">");
+				}
+			}
+			else if (includeRoot)
+			{
+				context.writer.write("/>");
 			}
 		}
 	}

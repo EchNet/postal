@@ -20,11 +20,21 @@ public class AssemblerTest
 	{
 		assembler = new Assembler();
 		data = new HashMap();
-		data.put("user", new Object() {
-			public String getName() {
-				return "Fred";
-			}
-		});
+		data.put("user", new User("Fred"));
+		data.put("users", Arrays.asList(new User[] { new User("Fred"), new User("Sam"), new User("Alex") }));
+	}
+
+	private static class User
+	{
+		private String name;
+
+		public User(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
 	}
 
 	@Test

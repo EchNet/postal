@@ -50,7 +50,7 @@ public class IntegerFunFacts
 		return facto.getSumOfProperDivisors(n);
 	}
 
-	public long rad()
+	public long getRad()
 	{
 		return facto.rad(n);
 	}

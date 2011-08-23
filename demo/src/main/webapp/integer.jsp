@@ -9,9 +9,24 @@
 <%
 	// Parse request parameters to create data context for assembly.
 	Map<String,Object> data = new HashMap<String,Object>();
-	if (request.getParameter("n") != null)
+
+	for (Map.Entry<String,String[] paramEntry : request.getParameterMap())
 	{
-		data.put("n", new IntegerFunFacts(Integer.parseInt(request.getParameter("n"))));
+		String key = paramEntry.getKey();
+		Object value;
+		if (key.equals("n"))
+		{
+			value = new IntegerFunFacts(paramEntry.getValue()[0]);
+		}
+		else
+		{
+			String[] values = paramEntry.getValue();
+			if (values.length == 1)
+				value = values[0];
+			else
+				value = values;
+		}
+		data.put(key, value);
 	}
 
 	// Form URL of root template.

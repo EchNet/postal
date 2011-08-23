@@ -2,15 +2,18 @@
 <h1 dwc:content="n.title">TITLE</h1>
 <h2 dwc:condition="n.prime">A prime number</h2>
 <div dwc:condition="n.base" style="margin: 30px;">
-<span style="font-size: 48px; color: blue;"><span dwc:content="n.base"/><sup dwc:content="n.exponent"/></span>
+<span style="font-size: 48px; color: blue;"><span dwc:content="n.base">X</span><sup dwc:content="n.exponent">y</sup></span>
 </div>
-<p>Represented as <span dwc:content="n.decimal"/> in decimal, <span dwc:content="n.hexadecimal"/> in
-hexadecimal, and <span dwc:content="n.octal"/> in octal.</p>
+<p>Represented as <span dwc:content="n.decimal">123</span> in decimal, <span dwc:content="n.hexadecimal">0x123</span> in
+hexadecimal, and <span dwc:content="n.octal">0123</span> in octal.</p>
 <div dwc:condition="!n.prime">
-<p>Some facts about <span dwc:content="n.value"/>...</p>
+<p>Some facts about <span dwc:content="n.value">the number</span>...</p>
 <ul>
-<li>The sum of its proper divisors is <span dwc:content="n.sumOfProperDivisors"/></li>
-<li>RAD(<span dwc:content="n.value"/>) = <span dwc:content="n.rad"/></li>
+<li>The sum of its proper divisors is <span dwc:content="n.sumOfProperDivisors">0000</span></li>
+<li>RAD(<span dwc:content="n.value"/>) = <span dwc:content="n.rad">0000</span></li>
 </ul>
+</div>
+<div dwc:condition="n.related" dwc:content="templates:related.xhtml">
+<div style="width:480px;height:60px;background-color:blue;font-weight:bold;color:white;font-size:32px;text-align:center;">RELATED ITEMS GO HERE</div>
 </div>
 </body>
