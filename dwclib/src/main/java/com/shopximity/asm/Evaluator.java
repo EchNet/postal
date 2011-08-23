@@ -161,7 +161,6 @@ public class Evaluator
 				}
 				catch (NoSuchMethodException e)
 				{
-throw new RuntimeException(methName + " Not found");
 				}
 			}
 			if (meth == null) 
