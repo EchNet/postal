@@ -1,13 +1,20 @@
 package com.shopximity.asm;
 
+import com.shopximity.ns.*;
 import java.io.*;
 import java.util.*;
-import java.lang.reflect.*;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 
 public class Evaluator
 {
+	public static String toString(Object obj)
+	{
+		if (obj == null) return "";
+		return  obj.toString();
+	}
+
 	public static boolean toBoolean(Object obj)
 	{
 		return !(obj == null ||
@@ -16,27 +23,42 @@ public class Evaluator
 				 obj.equals(Collections.emptyList()));
 	}
 
-	public Object evaluate(String expression, Object data)
-		throws Exception
+	public Object evaluate(String expression, Namespace data)
+		throws AssemblerException
 	{
-		TokenStream tStream = new TokenStream(expression);
-
-		if (tStream.peek(1) != null && tStream.peek(0).type == StreamTokenizer.TT_WORD && tStream.peek(1).type == ':')
+		try
 		{
-			return new URI(expression);
+			TokenStream tStream = new TokenStream(expression);
+
+			if (tStream.peek(1) != null && tStream.peek(0).type == StreamTokenizer.TT_WORD && tStream.peek(1).type == ':')
+			{
+				return new URI(expression);
+			}
+
+			Node node = new ExpressionState().parse(tStream);
+			Token t = tStream.pop();
+			if (t != null) 
+				throw new ParseException("dangling crud", 0);
+
+			if (node != null)
+			{
+				return node.evaluate(data);
+			}
+
+			return null;
 		}
-
-		Node node = new ExpressionState().parse(tStream);
-		Token t = tStream.pop();
-		if (t != null) 
-			throw new ParseException("dangling crud", 0);
-
-		if (node != null)
+		catch (URISyntaxException e)
 		{
-			return node.evaluate(data);
+			throw new AssemblerException(e);
 		}
-
-		return null;
+		catch (ParseException e)
+		{
+			throw new AssemblerException(e);
+		}
+		catch (IOException e)
+		{
+			throw new AssemblerException(e);
+		}
 	}
 
 	private abstract static class ParseState
@@ -116,14 +138,14 @@ public class Evaluator
 
 	private abstract static class Node
 	{
-		public abstract Object evaluate(Object data);
+		public abstract Object evaluate(Namespace data);
 	}
 
 	private static class NotNode extends Node
 	{
 		Node child;
 
-		public Object evaluate(Object data)
+		public Object evaluate(Namespace data)
 		{
 			return !toBoolean(child.evaluate(data));
 		}
@@ -134,51 +156,25 @@ public class Evaluator
 		Node lhs;
 		String name;
 
-		public Object evaluate(Object data)
+		public Object evaluate(Namespace data)
 		{
-			Object container;
+			Namespace namespace = null;
 			if (lhs == null) 
-				container = data;
+				namespace = data;
 			else
-				container = lhs.evaluate(data);
-			if (container == null)
-				return null;
-			if (container instanceof Map)
 			{
-				return ((Map) container).get(name);
-			}
-			if (container instanceof List)
-			{
-				return ((List) container).get(Integer.parseInt(name));
-			}
-			Method meth = null;
-			for (String prefix : new String[] { "get", "is" })
-			{
-				String methName = prefix + Character.toUpperCase(name.charAt(0)) + name.substring(1);
-				try
+				Object result = lhs.evaluate(data);
+				if (result != null)
 				{
-					meth = container.getClass().getMethod(methName, new Class[0]);
-					if (meth != null)
-						break;
-				}
-				catch (NoSuchMethodException e)
-				{
+					if (result instanceof Namespace)
+						namespace = (Namespace) result;
+					else if (result instanceof Map)
+						namespace = new MapBasedNamespace((Map<String,Object>)result);
+					else
+						namespace = new BeanBasedNamespace(result);
 				}
 			}
-			if (meth == null) 
-				return null;
-			try
-			{
-				return meth.invoke(container, null);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new RuntimeException(e);
-			}
-			catch (InvocationTargetException e)
-			{
-				throw new RuntimeException(e.getCause());
-			}
+			return namespace == null ? null : namespace.get(name);
 		}
 	}
 

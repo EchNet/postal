@@ -4,8 +4,8 @@
 <p dwc:repeat="nonesuch">SHOULD NOT APPEAR</p>
 <p dwc:repeat="nonesuch,n">SHOULD NOT APPEAR</p>
 <p dwc:repeat="user">SHOULD APPEAR ONCE</p>
-<p dwc:repeat="user,u">Name: <span dwc:content="u.name"/></p>
+<p dwc:repeat="user,u">Name: <span dwc:content="{{u.name}}"/></p>
 <p dwc:repeat="users">SHOULD APPEAR THREE TIMES</p>
-<p dwc:repeat="users,u">Name: <span dwc:content="u.name"/></p>
+<p dwc:repeat="users,u">Name: <span dwc:content="{{u.name}}"/></p>
 </body>
 </html>

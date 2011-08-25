@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:dwc="http://shopximity.com/schema/dwc">
-<head dwc:content="templates:head.include.xhtml">
-<title>THIS TITLE SHOULD BE REPLACED WITH THE ONE FROM head.include.</title>
+<head>
+<title dwc:include="{{user.name}}.include.xhtml">THIS TITLE SHOULD BE REPLACED WITH THE ONE FROM Fred.include.</title>
 </head>
-<body dwc:content="templates:body.include.xhtml">
+<body dwc:include="body.include.xhtml">
 <p>THIS CONTENT SHOULD BE REPLACED WITH CONTENT FROM body.include.</p>
 </body>
 </html>

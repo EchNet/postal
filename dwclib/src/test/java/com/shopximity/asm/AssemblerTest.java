@@ -1,5 +1,6 @@
 package com.shopximity.asm;
 
+import com.shopximity.ns.*;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -13,18 +14,19 @@ import static org.junit.Assert.assertTrue;
 public class AssemblerTest
 {
 	Assembler assembler; 
-	Map data;
+	Namespace namespace;
 
 	@Before
 	public void setUp()
 	{
 		assembler = new Assembler();
-		data = new HashMap();
+		Map data = new HashMap();
 		data.put("user", new User("Fred"));
 		data.put("users", Arrays.asList(new User[] { new User("Fred"), new User("Sam"), new User("Alex") }));
+		namespace = new MapBasedNamespace(data);
 	}
 
-	private static class User
+	public static class User
 	{
 		private String name;
 
@@ -90,6 +92,12 @@ public class AssemblerTest
 	}
 
 	@Test
+	public void testContents() throws Exception
+	{
+		verifyAssembly("contents");
+	}
+
+	@Test
 	public void testIncludes() throws Exception
 	{
 		verifyAssembly("includes");
@@ -105,6 +113,33 @@ public class AssemblerTest
 	public void testConditions() throws Exception
 	{
 		verifyAssembly("conditions");
+	}
+
+	@Test
+	public void testAttributes() throws Exception
+	{
+		verifyAssembly("attributes");
+	}
+
+	@Test
+	public void testConflictingIncludeAndContent() throws Exception
+	{
+		final String INPUT = "<html xmlns=\"http://www.w3.org/1999/xhtml\"" +
+							   " xmlns:dwc=\"http://shopximity.com/schema/dwc\"" +
+							   " dwc:content=\"\"" +
+							   " dwc:include=\"\"/>";
+
+		Throwable error = null;
+		try
+		{
+			assembler.assemble(createLiteralUrl(INPUT), new StringWriter());
+		}
+		catch (AssemblerException e)
+		{
+			error = e.getCause();
+		}
+		// TODO: assert that the error message contains meaningful information.
+		assertNotNull(error);
 	}
 
 	private URL createLiteralUrl(final String text) throws Exception
@@ -179,7 +214,7 @@ public class AssemblerTest
 	private void verifyAssembly(String templateName) throws Exception
 	{
 		StringWriter output = new StringWriter();
-		assembler.assemble(createClassPathUrl("templates/" + templateName + ".xhtml"), data, output);
+		assembler.assemble(createClassPathUrl("templates/" + templateName + ".xhtml"), namespace, output);
 		String expectedOutput = loadText(createClassPathUrl("solutions/" + templateName + ".html"));
 		assertEquals(expectedOutput, output.toString());
 	}
