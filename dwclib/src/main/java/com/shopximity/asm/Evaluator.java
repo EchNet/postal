@@ -3,8 +3,6 @@ package com.shopximity.asm;
 import com.shopximity.ns.*;
 import java.io.*;
 import java.util.*;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 
 public class Evaluator
@@ -29,27 +27,11 @@ public class Evaluator
 		try
 		{
 			TokenStream tStream = new TokenStream(expression);
-
-			if (tStream.peek(1) != null && tStream.peek(0).type == StreamTokenizer.TT_WORD && tStream.peek(1).type == ':')
-			{
-				return new URI(expression);
-			}
-
 			Node node = new ExpressionState().parse(tStream);
 			Token t = tStream.pop();
 			if (t != null) 
 				throw new ParseException("dangling crud", 0);
-
-			if (node != null)
-			{
-				return node.evaluate(data);
-			}
-
-			return null;
-		}
-		catch (URISyntaxException e)
-		{
-			throw new AssemblerException(e);
+			return node == null ? null : node.evaluate(data);
 		}
 		catch (ParseException e)
 		{

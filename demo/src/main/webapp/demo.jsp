@@ -1,22 +1,27 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" %>
 <%@page import="com.shopximity.asm.Assembler"%>
+<%@page import="com.shopximity.ns.MapBasedNamespace"%>
 <%@page import="com.shopximity.math.IntegerFunFacts"%>
 <%@page import="java.net.URL"%>
 <%@page import="java.util.*"%>
 <%!
-	Assembler assembler = new Assembler();
+	final static String ROOT_TEMPLATE_PATH = "templates/page.xhtml";
+
+	static Assembler assembler = new Assembler();
 %>
 <%
 	// Parse request parameters to create data context for assembly.
 	Map<String,Object> data = new HashMap<String,Object>();
 
-	for (Map.Entry<String,String[] paramEntry : request.getParameterMap())
+	for (Object pe : request.getParameterMap().entrySet())
 	{
+		// Until we move up to Java EE 6...
+		Map.Entry<String,String[]> paramEntry = (Map.Entry<String,String[]>) pe;
 		String key = paramEntry.getKey();
 		Object value;
 		if (key.equals("n"))
 		{
-			value = new IntegerFunFacts(paramEntry.getValue()[0]);
+			value = new IntegerFunFacts(Integer.parseInt(paramEntry.getValue()[0]));
 		}
 		else
 		{
@@ -30,7 +35,8 @@
 	}
 
 	// Form URL of root template.
-	URL templateUrl = new URL(request.getRequestURL().toString());
-	templateUrl = new URL(templateUrl, "templates/page.xhtml");
-	assembler.assemble(templateUrl, data, response.getWriter());
+	URL templateUrl = new URL(new URL(request.getRequestURL().toString()), ROOT_TEMPLATE_PATH);
+
+	// Assemble the root component.
+	assembler.assemble(templateUrl, new MapBasedNamespace(data), response.getWriter());
 %>

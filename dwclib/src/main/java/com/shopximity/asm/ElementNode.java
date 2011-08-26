@@ -127,6 +127,7 @@ class ElementNode extends Node
 			context.write("<");
 			context.write(localName);
 
+			// TODO: put out all xmlns attributes except DWC.
 			if (prefixMappings.containsKey(""))
 			{
 				context.write(" xmlns=\"");
@@ -159,7 +160,7 @@ class ElementNode extends Node
 			}
 		}
 
-		if (contentExpression != null || children.size() > 0)
+		if (contentExpression != null || includePath != null || children.size() > 0)
 		{
 			if (includeRoot)
 			{

@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:dwc="http://shopximity.com/schema/dwc">
-<head dwc:condition="n" dwc:content="templates:ihead.xhtml"/>
-<head dwc:condition="!n" dwc:content="templates:hhead.xhtml"/>
-<body dwc:condition="n" dwc:content="templates:ibody.xhtml"/>
-<body dwc:condition="!n" dwc:content="templates:hbody.xhtml"/>
+<head dwc:condition="n" dwc:include="ihead.xhtml"/>
+<head dwc:condition="!n" dwc:include="hhead.xhtml"/>
+<body dwc:condition="n" dwc:include="ibody.xhtml"/>
+<body dwc:condition="!n" dwc:include="hbody.xhtml"/>
 </html>
